@@ -14,7 +14,12 @@ func init() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	cnf := LoadConfig(w)
+	cnf, err := LoadConfig()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	anaconda.SetConsumerKey(cnf.ApiKey)
 	anaconda.SetConsumerSecret(cnf.ApiSecret)
 	api := anaconda.NewTwitterApi(cnf.AccessKey, cnf.AccessSecret)

@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"net/http"
 	"os"
 )
 
@@ -14,18 +14,20 @@ type Config struct {
 	AccessSecret string `json:"access_secret"`
 }
 
-func LoadConfig(w http.ResponseWriter) Config {
+func LoadConfig() (Config, error) {
+	var cnf Config
 	reader, err := os.Open("./config.json")
 	if err != nil {
-		fmt.Fprint(w, "opening config file: %s", err.Error())
+		err := errors.New(fmt.Sprintf("opening config file: ", err.Error()))
+		return cnf, err
 	}
 
 	dec := json.NewDecoder(reader)
-	var cnf Config
 	err = dec.Decode(&cnf)
 	if err != nil {
-		fmt.Fprint(w, "json decode error: %s", err.Error())
+		err := errors.New(fmt.Sprintf("json decode error: ", err.Error()))
+		return cnf, err
 	}
 
-	return cnf
+	return cnf, nil
 }
