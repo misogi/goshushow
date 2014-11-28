@@ -11,9 +11,6 @@ import (
 
 func init() {
 	http.HandleFunc("/", handler)
-	http.HandleFunc("/user", userHandler)
-	http.HandleFunc("/users", users)
-	http.HandleFunc("/sign", signHandler)
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
